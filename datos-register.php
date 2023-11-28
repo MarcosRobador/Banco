@@ -23,4 +23,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $conexion->close();
 }
+
+// Guardar nombre en la sesión
+if ($conexion->query($consulta) === TRUE) {
+    session_start();
+    $_SESSION['nombre'] = $nombre; 
+
+    header('Location: banco.html');
+    exit;
+}
+
 ?>

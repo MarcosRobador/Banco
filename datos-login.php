@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['nombre'] = $fila['nombre'];
             
             // Redireccionar a banco.html
-            header("Location: banco.html");
+            header("Location: banco.php");
             exit();
         } else {
             // La contraseña no coincide
