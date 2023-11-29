@@ -28,10 +28,18 @@ session_start();
         </div>
   
         <div class="content">
-            <!-- Mensaje de bienvenida -->
-            <p>Hola, <?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Invitado'; ?></p>
+            <!-- Para la fecha -->
+            <?php
+                $fecha = new DateTime();
+                $formatter = new IntlDateFormatter('es_ES', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+                $fechaFormateada = $formatter->format($fecha);
+            ?>
+                <!-- Mensaje de bienvenida -->
+                <p id="nombre">Hola, <?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Invitado'; ?>, hoy es <?php echo $fechaFormateada; ?>.</p>
+
         </div>
 
+        
         <script src="banco.js"></script>
 
 </body>
