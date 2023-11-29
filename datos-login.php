@@ -7,7 +7,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $conexion->real_escape_string($_POST['email']);
     $password = $conexion->real_escape_string($_POST['password']);
 
-    // Consulta para buscar el usuario
+    // Credenciales del administrador
+    $adminEmail = "admin@gmail.com";
+    $adminPassword = "admin123"; 
+
+    // Verifica si las credenciales son del administrador
+    if ($email === $adminEmail && $password === $adminPassword) {
+        // Iniciar sesión como administrador
+        $_SESSION['usuario_id'] = 0; 
+        $_SESSION['nombre'] = "admin";
+        
+        // Redireccionar a banco.php
+        header("Location: banco.php");
+        exit();
+    }
+
+    // Consulta para buscar el usuario en la base de datos
     $consulta = "SELECT id, nombre, password FROM usuarios WHERE email = '$email'";
     $resultado = $conexion->query($consulta);
 
@@ -16,10 +31,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $fila = $resultado->fetch_assoc();
         if (password_verify($password, $fila['password'])) {
             // La contraseña coincide
-            $_SESSION['usuario_id'] = $fila['id']; // Guardar datos relevantes en la sesión
+            $_SESSION['usuario_id'] = $fila['id']; 
             $_SESSION['nombre'] = $fila['nombre'];
             
-            // Redireccionar a banco.html
+            // Redireccionar a banco.php
             header("Location: banco.php");
             exit();
         } else {
