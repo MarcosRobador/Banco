@@ -20,7 +20,7 @@ session_start();
 
             <ul>
                 <li><a href="#">Inicio</a></li>
-                <li><a href="#">Perfil</a></li>
+                <li><a href="perfil.php">Perfil</a></li>
                 <li><a href="#">Productos</a></li>
                 <li><a href="#">Contacto</a></li>
                 <li><a href="#">Ayuda</a></li>

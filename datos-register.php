@@ -6,6 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $conexion->real_escape_string($_POST['nombre']);
     $email = $conexion->real_escape_string($_POST['email']);
     $password = $conexion->real_escape_string($_POST['password']);
+    
 
     // Encripta la contraseña
     $password_encriptada = password_hash($password, PASSWORD_DEFAULT);
