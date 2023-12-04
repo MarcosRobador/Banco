@@ -39,9 +39,15 @@ $usuario_id = $_SESSION['usuario_id'];
 // Si se envía el formulario de actualización
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre_actualizado = $conexion->real_escape_string($_POST['nombre']);
-    $email_actualizado = $conexion->real_escape_string($_POST['email']);
+    $apellido_actualizado = $conexion->real_escape_string($_POST['apellido']);
+    $fecha_nacimiento_actualizado = $conexion->real_escape_string($_POST['fecha_nacimiento']);
+    $direccion_actualizado = $conexion->real_escape_string($_POST['direccion']);
+    $ciudad_actualizado = $conexion->real_escape_string($_POST['ciudad']);
+    $codigo_postal_actualizado = $conexion->real_escape_string($_POST['codigo_postal']);
+    $provincia_actualizado = $conexion->real_escape_string($_POST['provincia']);
+    $pais_actualizado = $conexion->real_escape_string($_POST['pais']);
 
-    $consulta_actualizacion = "UPDATE usuarios SET nombre = '$nombre_actualizado', email = '$email_actualizado' WHERE id = '$usuario_id'";
+    $consulta_actualizacion = "UPDATE usuarios SET nombre = '$nombre_actualizado', apellido = '$apellido_actualizado', fecha_nacimiento = '$fecha_nacimiento_actualizado', direccion = '$direccion_actualizado', codigo_postal = '$codigo_postal_actualizado' ciudad '$ciudad_actualizado', provincia '$provincia_actualizado', pais '$pais_actualizado' WHERE id = '$usuario_id'";
     
     if ($conexion->query($consulta_actualizacion) === TRUE) {
         // Actualizar el nombre en la sesión
@@ -53,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Obtener los datos actualizados del usuario
-$consulta = "SELECT nombre, email FROM usuarios WHERE id = '$usuario_id'";
+$consulta = "SELECT nombre, apellido, dni, email, fecha_nacimiento, codigo_postal, direccion, ciudad, provincia, pais FROM usuarios WHERE id = '$usuario_id'";
 $resultado = $conexion->query($consulta);
 
 if ($resultado->num_rows > 0) {
@@ -67,11 +73,56 @@ $conexion->close();
 
         <!-- Formulario HTML para mostrar y editar los datos del usuario -->
         <form action="perfil.php" method="post">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" value="<?php echo $usuario['nombre']; ?>">
+            
+            <p>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" value="<?php echo $usuario['nombre']; ?>">
+            </p>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="<?php echo $usuario['email']; ?>">
+            <p>
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" value="<?php echo $usuario['apellido']; ?>">
+            </p>
+
+            <p>
+                <label for="dni">DNI:</label>
+                <span id="dni"><?php echo isset($usuario['dni']) ? htmlspecialchars($usuario['dni']) : 'No disponible'; ?></span>
+            </p>
+
+            <p>
+                <label for="email">Email:</label>
+                <span id="email"><?php echo isset($usuario['email']) ? htmlspecialchars($usuario['email']) : 'No disponible'; ?></span>
+            </p>
+
+            <p>
+                <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo $usuario['fecha_nacimiento']; ?>">
+            </p>
+
+            <p>
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" value="<?php echo $usuario['direccion']; ?>">
+            </p>
+
+            <p>
+                <label for="codigo_postal">Código postal:</label>
+                <input type="text" id="codigo_postal" name="codigo_postal" value="<?php echo $usuario['codigo_postal']; ?>">
+            </p>
+
+            <p>
+                <label for="ciudad">Ciudad:</label>
+                <input type="text" id="ciudad" name="ciudad" value="<?php echo $usuario['ciudad']; ?>">
+            </p>
+
+            <p>
+                <label for="provincia">Provincia:</label>
+                <input type="text" id="provincia" name="provincia" value="<?php echo $usuario['provincia']; ?>">
+            </p>
+
+            <p>
+                <label for="pais">País:</label>
+                <input type="text" id="pais" name="pais" value="<?php echo $usuario['pais']; ?>">
+            </p>
 
             <input type="submit" value="Actualizar">
         </form>
