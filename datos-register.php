@@ -3,6 +3,7 @@ include 'conexion.php';
 
 // Verifica si el formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recopilación y saneamiento de los datos del formulario
     $nombre = $conexion->real_escape_string($_POST['nombre']);
     $email = $conexion->real_escape_string($_POST['email']);
     $password = $conexion->real_escape_string($_POST['password']);
@@ -18,11 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Encripta la contraseña
     $password_encriptada = password_hash($password, PASSWORD_DEFAULT);
 
-    // Procesa la foto de perfil si se subió una
-    if (isset($_FILES['fotoPerfil']) && $_FILES['fotoPerfil']['error'] == 0) {
-        $fotoPerfil = $_FILES['fotoPerfil'];
+    // Define una consulta básica sin la foto de perfil
+    $consulta = "INSERT INTO usuarios (nombre, email, password, apellido, dni, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, pais) VALUES ('$nombre', '$email', '$password_encriptada', '$apellido', '$dni', '$fecha_nacimiento', '$direccion', '$codigo_postal', '$ciudad', '$provincia', '$pais')";
 
-        // Verificar tamaño y tipo del archivo
+    // Procesa la foto de perfil si se subió una
+    if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] == 0) {
+        $fotoPerfil = $_FILES['foto_perfil'];
         $tamañoMaximo = 5 * 1024 * 1024; // 5MB, por ejemplo
         $tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif'];
 
@@ -32,8 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Intenta mover el archivo subido al directorio de destino
             if (move_uploaded_file($fotoPerfil['tmp_name'], $rutaDestino)) {
-                // Aquí puedes modificar tu consulta para incluir la ruta de la imagen
-                $consulta = "INSERT INTO usuarios (nombre, email, password, apellido, dni, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, pais, fotoPerfil) VALUES ('$nombre', '$email', '$password_encriptada', '$apellido', '$dni', '$fecha_nacimiento', '$direccion', '$codigo_postal', '$ciudad', '$provincia', '$pais', '$rutaDestino')";
+                // Modifica la consulta para incluir la ruta de la imagen
+                $consulta = "INSERT INTO usuarios (nombre, email, password, apellido, dni, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, pais, foto_perfil) VALUES ('$nombre', '$email', '$password_encriptada', '$apellido', '$dni', '$fecha_nacimiento', '$direccion', '$codigo_postal', '$ciudad', '$provincia', '$pais', '$rutaDestino')";
             } else {
                 echo "Error al subir el archivo.";
             }
@@ -42,14 +44,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Inserta el nuevo usuario en la base de datos
-    if ($conexion->query($consulta) === TRUE) {
-        session_start();
-        $_SESSION['nombre'] = $nombre; 
-        header('Location: banco.html');
-        exit;
+    // Verifica si la consulta está definida y no es vacía
+    if (isset($consulta) && $consulta) {
+        if ($conexion->query($consulta) === TRUE) {
+            session_start();
+            $_SESSION['nombre'] = $nombre; 
+            header('Location: login.html');
+            exit;
+        } else {
+            echo "Error: " . $conexion->error;
+        }
     } else {
-        echo "Error: " . $consulta . "<br>" . $conexion->error;
+        echo "Consulta SQL no definida o vacía.";
     }
 
     $conexion->close();

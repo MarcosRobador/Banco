@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $provincia_actualizado = $conexion->real_escape_string($_POST['provincia']);
     $pais_actualizado = $conexion->real_escape_string($_POST['pais']);
 
-    $consulta_actualizacion = "UPDATE usuarios SET nombre = '$nombre_actualizado', apellido = '$apellido_actualizado', fecha_nacimiento = '$fecha_nacimiento_actualizado', direccion = '$direccion_actualizado', codigo_postal = '$codigo_postal_actualizado' ciudad '$ciudad_actualizado', provincia '$provincia_actualizado', pais '$pais_actualizado' WHERE id = '$usuario_id'";
+    $consulta_actualizacion = "UPDATE usuarios SET nombre = '$nombre_actualizado', apellido = '$apellido_actualizado', fecha_nacimiento = '$fecha_nacimiento_actualizado', direccion = '$direccion_actualizado', codigo_postal = '$codigo_postal_actualizado', ciudad = '$ciudad_actualizado', provincia = '$provincia_actualizado', pais = '$pais_actualizado' WHERE id = '$usuario_id'";
     
     if ($conexion->query($consulta_actualizacion) === TRUE) {
         // Actualizar el nombre en la sesión
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Obtener los datos actualizados del usuario
-$consulta = "SELECT nombre, apellido, dni, email, fecha_nacimiento, codigo_postal, direccion, ciudad, provincia, pais FROM usuarios WHERE id = '$usuario_id'";
+$consulta = "SELECT nombre, apellido, dni, email, fecha_nacimiento, codigo_postal, direccion, ciudad, provincia, pais, foto_perfil FROM usuarios WHERE id = '$usuario_id'";
 $resultado = $conexion->query($consulta);
 
 if ($resultado->num_rows > 0) {
@@ -127,7 +127,14 @@ $conexion->close();
             <input type="submit" value="Actualizar">
         </form>
         
-    </div>
+        <div class="perfil-imagen">
+
+            <?php
+                $rutaImagen = isset($usuario['foto_perfil']) && !empty($usuario['foto_perfil']) ? $usuario['foto_perfil'] : 'img/foto-predeterminada.png';
+            ?>
+            <img src="<?php echo $rutaImagen; ?>" alt="Foto de perfil">
+
+        </div>
 
 </body>
-</html>
+</html>         
