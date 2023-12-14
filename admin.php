@@ -1,3 +1,31 @@
+<?php
+session_start();
+include 'conexion.php';
+
+// Verifica si el usuario es administrador
+
+
+$mensaje = "";
+
+// Lógica para aprobar o rechazar préstamos
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $idPrestamo = $_POST['id_prestamo'];
+    $accion = $_POST['accion'];
+
+    $estadoAprobacion = ($accion == 'aprobar') ? 1 : 0;
+    $consultaActualizar = "UPDATE prestamos SET aprobado = '$estadoAprobacion' WHERE id = '$idPrestamo'";
+    if ($conexion->query($consultaActualizar) === TRUE) {
+        $mensaje = "Préstamo " . ($estadoAprobacion ? "aprobado" : "rechazado") . ".";
+    } else {
+        $mensaje = "Error al actualizar el préstamo: " . $conexion->error;
+    }
+}
+
+// Obtener todas las solicitudes de préstamos pendientes
+$consultaPrestamos = "SELECT * FROM prestamos WHERE aprobado IS NULL";
+$resultadoPrestamos = $conexion->query($consultaPrestamos);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,5 +51,38 @@
     </div>
 
     <div class="content">
+        <h2>Gestión de Préstamos</h2>
+        <?php if (!empty($mensaje)): ?>
+            <div class="alert alert-info"><?php echo $mensaje; ?></div>
+        <?php endif; ?>
+
+        <!-- Tabla de solicitudes de préstamos -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario ID</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($fila = $resultadoPrestamos->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo $fila['id']; ?></td>
+                        <td><?php echo $fila['usuario_id']; ?></td>
+                        <td><?php echo $fila['cantidad']; ?></td>
+                        <td>
+                            <form method="post">
+                                <input type="hidden" name="id_prestamo" value="<?php echo $fila['id']; ?>">
+                                <button type="submit" name="accion" value="aprobar">Aprobar</button>
+                                <button type="submit" name="accion" value="rechazar">Rechazar</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
