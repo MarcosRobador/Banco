@@ -32,7 +32,7 @@ $resultadoPrestamos = $conexion->query($consultaPrestamos);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="banco.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
         <!-- Barra lateral -->
@@ -42,7 +42,7 @@ $resultadoPrestamos = $conexion->query($consultaPrestamos);
 
         <ul>
             <li><a href="#">Inicio</a></li>
-            <li><a href="perfil.php">Perfil</a></li>
+            <li><a href="perfiles-admin.php">Perfiles</a></li>
             <li><a href="#">Productos</a></li>
             <li><a href="#">Contacto</a></li>
             <li><a href="#">Ayuda</a></li>
