@@ -2,7 +2,6 @@
 session_start();
 include 'conexion.php';
 
-// Verifica si el usuario es administrador
 
 
 $mensaje = "";
