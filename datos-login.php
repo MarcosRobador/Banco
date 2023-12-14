@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['nombre'] = "admin";
         
         // Redireccionar a banco.php
-        header("Location: banco.php");
+        header("Location: admin.php");
         exit();
     }
 
