@@ -30,7 +30,7 @@ include 'conexion.php';
 
 // Asegurarse de que el usuario está logueado
 if (!isset($_SESSION['usuario_id'])) {
-    header('Location: login.html');
+    header('Location: /html/login.html');
     exit;
 }
 

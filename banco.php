@@ -3,6 +3,7 @@ session_start();
 include 'conexion.php';
 
 $mensaje = "";
+$saldoConvertido = 0; // Define la variable con un valor predeterminado
 
 // Manejar acciones de depósito, retiro y solicitud de préstamo
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -56,6 +57,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $mensaje = "No cumples con los requisitos para el préstamo.";
         }
     }
+
+    // Función para convertir la moneda
+function convertirMoneda($cantidad, $moneda) {
+    $tasas = [
+        'euro' => 1,
+        'dolar' => 1.1,
+        'libra' => 0.9,
+        'yen' => 160,
+        'rublo' => 95
+    ];
+    
+    if (isset($tasas[$moneda])) {
+        return $cantidad * $tasas[$moneda];
+    }
+    return $cantidad; // Si no se encuentra la moneda, devuelve el monto original.
+}
+
+// Manejar acciones de depósito, retiro y solicitud de préstamo
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $usuario_id = $_SESSION['usuario_id'];
+    $accion = $_POST['accion'];
+
+
+    // Acción para cambiar la moneda
+    if ($accion == 'cambiar_moneda') {
+        $monedaSeleccionada = $_POST['moneda'];
+        $_SESSION['moneda'] = $monedaSeleccionada; // Guardar la moneda en la sesión
+    }
+}
+
+// Obtener el saldo y convertirlo a la moneda seleccionada
+$consultaSaldo = "SELECT saldo FROM usuarios WHERE id = '$usuario_id'";
+$resultado = $conexion->query($consultaSaldo);
+if ($resultado) {
+    $fila = $resultado->fetch_assoc();
+    $_SESSION['saldo'] = $fila['saldo']; // Guardar el saldo en la sesión
+    $saldoConvertido = convertirMoneda($fila['saldo'], $_SESSION['moneda'] ?? 'euro'); // ?? es el operador de fusión de null
+} else {
+    $mensaje = "Error al obtener el saldo actual: " . $conexion->error;
+}
+
 
     $conexion->close();
 }
@@ -111,7 +153,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" name="accion" value="solicitar_prestamo">Solicitar Préstamo</button>
         </form>
     </div>
+    <form method="post" action="banco.php">
+            <select name="moneda">
+                <option value="euro" <?php echo ($_SESSION['moneda'] ?? 'euro') === 'euro' ? 'selected' : ''; ?>>Euro</option>
+                <option value="dolar" <?php echo ($_SESSION['moneda'] ?? 'euro') === 'dolar' ? 'selected' : ''; ?>>Dólar</option>
+                <option value="libra" <?php echo ($_SESSION['moneda'] ?? 'euro') === 'libra' ? 'selected' : ''; ?>>Libra</option>
+                <option value="yen" <?php echo ($_SESSION['moneda'] ?? 'euro') === 'yen' ? 'selected' : ''; ?>>Yen</option>
+                <option value="rublo" <?php echo ($_SESSION['moneda'] ?? 'euro') === 'rublo' ? 'selected' : ''; ?>>Rublo</option>
+            </select>
+            <button type="submit" name="accion" value="cambiar_moneda">Cambiar Moneda</button>
+        </form>
 
+        <!-- Mostrar el saldo en la moneda seleccionada -->
+        <p>Tu saldo en <?php echo $_SESSION['moneda'] ?? 'euro'; ?> es: <?php echo number_format($saldoConvertido, 2); ?></p>
+    </div>
     <script src="banco.js"></script>
 </body>
 </html>

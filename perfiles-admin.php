@@ -70,5 +70,5 @@
                     </div>
                     
                     <script src="banco.js"></script>
-                    </body>
-                    </html>
+</body>
+</html>
