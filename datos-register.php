@@ -1,6 +1,39 @@
 <?php
 include 'conexion.php'; 
 
+function letra_a_binario($letra) {
+    $posicion = ord(strtoupper($letra)) - ord('A') + 1;
+    return str_pad(decbin($posicion), 5, "0", STR_PAD_LEFT);
+}
+
+function generar_identificador_iban($nombre, $conexion) {
+    $nombre = str_pad($nombre, 4, "z");
+    $nombre = substr($nombre, 0, 4);
+    $binario = '';
+
+    for ($i = 0; $i < 4; $i++) {
+        $binario .= letra_a_binario($nombre[$i]);
+    }
+
+    $iban_unico = $binario;
+    $contador = 1;
+
+    do {
+        $consulta = "SELECT COUNT(*) AS cantidad FROM usuarios WHERE iban = '$iban_unico'";
+        $resultado = $conexion->query($consulta);
+        $fila = $resultado->fetch_assoc();
+
+        if ($fila['cantidad'] == 0) {
+            break;
+        } else {
+            $iban_unico = $binario . str_repeat(($contador % 2 == 0) ? '0' : '1', $contador);
+            $contador++;
+        }
+    } while (true);
+
+    return $iban_unico;
+}
+
 // Verifica si el formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Recopilación y saneamiento de los datos del formulario
@@ -19,8 +52,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Encripta la contraseña
     $password_encriptada = password_hash($password, PASSWORD_DEFAULT);
 
-    // Define una consulta básica sin la foto de perfil
-    $consulta = "INSERT INTO usuarios (nombre, email, password, apellido, dni, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, pais) VALUES ('$nombre', '$email', '$password_encriptada', '$apellido', '$dni', '$fecha_nacimiento', '$direccion', '$codigo_postal', '$ciudad', '$provincia', '$pais')";
+    // Genera el identificador IBAN basado en el nombre
+    $iban = generar_identificador_iban($nombre, $conexion);
+
+    // Consulta con el IBAN
+    $consulta = "INSERT INTO usuarios (nombre, email, password, apellido, dni, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, pais, iban) VALUES ('$nombre', '$email', '$password_encriptada', '$apellido', '$dni', '$fecha_nacimiento', '$direccion', '$codigo_postal', '$ciudad', '$provincia', '$pais', '$iban')";
 
     // Procesa la foto de perfil si se subió una
     if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] == 0) {
@@ -34,8 +70,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Intenta mover el archivo subido al directorio de destino
             if (move_uploaded_file($fotoPerfil['tmp_name'], $rutaDestino)) {
-                // Modifica la consulta para incluir la ruta de la imagen
-                $consulta = "INSERT INTO usuarios (nombre, email, password, apellido, dni, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, pais, foto_perfil) VALUES ('$nombre', '$email', '$password_encriptada', '$apellido', '$dni', '$fecha_nacimiento', '$direccion', '$codigo_postal', '$ciudad', '$provincia', '$pais', '$rutaDestino')";
+                // Si se sube el archivo con éxito, incluye la ruta de la imagen en la consulta
+                $consulta = "INSERT INTO usuarios (nombre, email, password, apellido, dni, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, pais, foto_perfil, iban) VALUES ('$nombre', '$email', '$password_encriptada', '$apellido', '$dni', '$fecha_nacimiento', '$direccion', '$codigo_postal', '$ciudad', '$provincia', '$pais', '$rutaDestino', '$iban')";
             } else {
                 echo "Error al subir el archivo.";
             }
@@ -44,11 +80,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Verifica si la consulta está definida y no es vacía
+    // Ejecuta la consulta de inserción en la base de datos
     if (isset($consulta) && $consulta) {
         if ($conexion->query($consulta) === TRUE) {
             session_start();
-            $_SESSION['nombre'] = $nombre; 
+            $_SESSION['nombre'] = $nombre;
             header('Location: login.html');
             exit;
         } else {
@@ -58,6 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Consulta SQL no definida o vacía.";
     }
 
+    // Cierra la conexión de la base de datos
     $conexion->close();
 }
 ?>

@@ -17,7 +17,7 @@
             <ul>
                 <li><a href="banco.php">Inicio</a></li>
                 <li><a href="#">Perfil</a></li>
-                <li><a href="#">Sobre Nosotros</a></li>
+                <li><a href="sobre-nosotros.php">Sobre Nosotros</a></li>
                 <li><a href="#">Contacto</a></li>
                 <li><a href="#">Ayuda</a></li>
             </ul>
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Obtener los datos actualizados del usuario
-$consulta = "SELECT nombre, apellido, dni, email, fecha_nacimiento, codigo_postal, direccion, ciudad, provincia, pais, foto_perfil FROM usuarios WHERE id = '$usuario_id'";
+$consulta = "SELECT nombre, apellido, dni, email, fecha_nacimiento, codigo_postal, direccion, ciudad, provincia, pais, foto_perfil, iban FROM usuarios WHERE id = '$usuario_id'";
 $resultado = $conexion->query($consulta);
 
 if ($resultado->num_rows > 0) {
@@ -122,6 +122,11 @@ $conexion->close();
             <p>
                 <label for="pais">País:</label>
                 <input type="text" id="pais" name="pais" value="<?php echo $usuario['pais']; ?>">
+            </p>
+
+            <p>
+                <label for="iban">IBAN:</label>
+                <span id="iban"><?php echo isset($usuario['iban']) ? htmlspecialchars($usuario['iban']) : 'No disponible'; ?></span>
             </p>
 
             <input type="submit" value="Actualizar">
