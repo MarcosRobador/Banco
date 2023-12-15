@@ -119,10 +119,10 @@ if ($resultado) {
         <h3>Bankini</h3>
         <img class="logo" src="img/Logo-removebg-preview.png" alt="Logo" width="60" height="40">
         <ul>
-            <li><a href="#">Inicio</a></li>
+            <li><a href="banco.php">Inicio</a></li>
             <li><a href="perfil.php">Perfil</a></li>
             <li><a href="sobre-nosotros.php">Sobre Nosotros</a></li>
-            <li><a href="#">Contacto</a></li>
+            <li><a href="contacto.php">Contacto</a></li>
             <li><a href="#">Ayuda</a></li>
         </ul>
     </div>
@@ -140,20 +140,22 @@ if ($resultado) {
             <div class="alert alert-info"><?php echo $mensaje; ?></div>
         <?php endif; ?>
 
+        <div class="main-content">
+
         <!-- Formulario para depositar y retirar -->
-        <form method="post" action="banco.php">
+        <form class="form-banco" method="post" action="banco.php">
             <input type="number" name="cantidad" placeholder="Cantidad" min="0" step="0.01" required>
             <button type="submit" name="accion" value="depositar">Depositar</button>
             <button type="submit" name="accion" value="retirar">Retirar</button>
         </form>
 
         <!-- Formulario para solicitar un préstamo -->
-        <form method="post" action="banco.php">
+        <form class="form-banco" method="post" action="banco.php">
             <input type="number" name="cantidad_prestamo" placeholder="Cantidad del Préstamo" min="0" step="0.01" required>
             <button type="submit" name="accion" value="solicitar_prestamo">Solicitar Préstamo</button>
         </form>
     </div>
-    <form method="post" action="banco.php">
+    <form class="form-banco" id="moneda" method="post" action="banco.php">
             <select name="moneda">
                 <option value="euro" <?php echo ($_SESSION['moneda'] ?? 'euro') === 'euro' ? 'selected' : ''; ?>>Euro</option>
                 <option value="dolar" <?php echo ($_SESSION['moneda'] ?? 'euro') === 'dolar' ? 'selected' : ''; ?>>Dólar</option>
@@ -166,6 +168,7 @@ if ($resultado) {
 
         <!-- Mostrar el saldo en la moneda seleccionada -->
         <p>Tu saldo en <?php echo $_SESSION['moneda'] ?? 'euro'; ?> es: <?php echo number_format($saldoConvertido, 2); ?></p>
+    </div>
     </div>
     <script src="banco.js"></script>
 </body>

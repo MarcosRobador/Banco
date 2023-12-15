@@ -18,7 +18,7 @@
                 <li><a href="banco.php">Inicio</a></li>
                 <li><a href="#">Perfil</a></li>
                 <li><a href="sobre-nosotros.php">Sobre Nosotros</a></li>
-                <li><a href="#">Contacto</a></li>
+                <li><a href="contacto.php">Contacto</a></li>
                 <li><a href="#">Ayuda</a></li>
             </ul>
         </div>
@@ -72,7 +72,7 @@ $conexion->close();
 ?>
 
         <!-- Formulario HTML para mostrar y editar los datos del usuario -->
-        <form action="perfil.php" method="post">
+        <form id="formulario-perfil" action="perfil.php" method="post">
             
             <p>
                 <label for="nombre">Nombre:</label>
@@ -137,7 +137,7 @@ $conexion->close();
             <?php
                 $rutaImagen = isset($usuario['foto_perfil']) && !empty($usuario['foto_perfil']) ? $usuario['foto_perfil'] : 'img/foto-predeterminada.png';
             ?>
-            <img src="<?php echo $rutaImagen; ?>" alt="Foto de perfil">
+            <img id="foto-perfil" src="<?php echo $rutaImagen; ?>" alt="Foto de perfil">
 
         </div>
 

@@ -17,7 +17,7 @@
             <li><a href="banco.php">Inicio</a></li>
             <li><a href="perfil.php">Perfil</a></li>
             <li><a href="sobre-nosotros.php">Sobre Nosotros</a></li>
-            <li><a href="#">Contacto</a></li>
+            <li><a href="contacto.php">Contacto</a></li>
             <li><a href="#">Ayuda</a></li>
         </ul>
     </div>
