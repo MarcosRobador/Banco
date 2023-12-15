@@ -6,32 +6,30 @@ body {
 
 .sidebar {
   width: 250px;
-  height: 100vh;
-  background-color: #003366;
-  color: white;
-  padding: 20px;
+  height: 120vh;
+  padding: 10px;
+  background-color: #004080;
 }
-
 .sidebar h3 {
-  color: #fff;
+  color: white;
   text-align: center;
 }
-
 .sidebar ul {
   list-style-type: none;
   padding: 0;
+}
+.sidebar ul li {
+  background-color: #00488b;
+}
+.sidebar ul li a {
+  color: white;
+  text-align: center;
 }
 
 .sidebar ul li {
   padding: 10px;
   margin-bottom: 10px;
-  background-color: #0055A4;
   text-align: center;
-}
-
-.sidebar ul li a {
-  color: white;
-  display: block;
 }
 
 .content {
@@ -43,4 +41,12 @@ body {
 
 .logo {
   margin-left: 35%;
+}
+
+.video-responsive {
+  overflow: hidden;
+  padding-bottom: 56.25%; /* Ratio de aspecto 16:9 */
+  height: 0;
+  margin-left: 300px;
+  margin-top: 30px;
 }

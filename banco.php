@@ -121,7 +121,7 @@ if ($resultado) {
         <ul>
             <li><a href="#">Inicio</a></li>
             <li><a href="perfil.php">Perfil</a></li>
-            <li><a href="#">Productos</a></li>
+            <li><a href="sobre-nosotros.php">Sobre Nosotros</a></li>
             <li><a href="#">Contacto</a></li>
             <li><a href="#">Ayuda</a></li>
         </ul>

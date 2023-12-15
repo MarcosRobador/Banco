@@ -1,42 +1,77 @@
+// Definición de variables
+$ancho-sidebar: 250px;
+$alto-sidebar: 120vh;
+$color-fondo-sidebar: #003366;
+$color-texto-sidebar: white;
+$padding-general: 20px;
+$color-fondo-items: #0055A4;
+$margin-bottom-items: 10px;
+$padding-items: 10px;
+
+// Nuevas variables con operaciones
+$padding-sidebar: $padding-general / 2;
+$color-fondo-sidebar-claro: lighten($color-fondo-sidebar, 5%);
+$color-fondo-items-oscuro: darken($color-fondo-items, 5%);
+
+// Mixins
+@mixin estilo-texto($color) {
+  color: $color;
+  text-align: center;
+}
+
+@mixin layout-sidebar($ancho, $alto, $padding) {
+  width: $ancho;
+  height: $alto;
+  padding: $padding;
+}
+
 body {
     display: flex;
 }
 
 .sidebar {
-    width: 250px; 
-    height: 100vh; 
-    background-color: #003366; 
-    color: white; 
-    padding: 20px;
+    @include layout-sidebar($ancho-sidebar, $alto-sidebar, $padding-sidebar); // Usar mixin para layout
+    background-color: $color-fondo-sidebar-claro;
+
+    h3 {
+        @include estilo-texto($color-texto-sidebar); // Usar mixin para estilo de texto
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+
+        li {
+            @extend %item-estilo;
+            background-color: $color-fondo-items-oscuro;
+        }
+
+        li a {
+            @include estilo-texto($color-texto-sidebar); // Reutilizar mixin para enlaces
+        }
+    }
 }
 
-.sidebar h3 {
-    color: #fff;
+%item-estilo { // Placeholder para estilo común
+    padding: $padding-items;
+    margin-bottom: $margin-bottom-items;
     text-align: center;
-}
-
-.sidebar ul {
-    list-style-type: none; 
-    padding: 0;
-}
-
-.sidebar ul li {
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #0055A4; 
-    text-align: center;
-}
-
-.sidebar ul li a {
-    color: white;
-    display: block;
 }
 
 .content {
     flex-grow: 1;
-    padding: 20px;
+    padding: $padding-general;
 }
 
-.logo{
+.logo {
     margin-left: 35%;
 }
+.video-responsive {
+    overflow: hidden;
+    padding-bottom: 56.25%; /* Ratio de aspecto 16:9 */
+    height: 0;
+    margin-left: 300px;
+    margin-top: 30px;
+}
+
+
