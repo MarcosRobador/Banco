@@ -1,0 +1,42 @@
+body {
+    display: flex;
+}
+
+.sidebar {
+    width: 250px; 
+    height: 100vh; 
+    background-color: #003366; 
+    color: white; 
+    padding: 20px;
+}
+
+.sidebar h3 {
+    color: #fff;
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style-type: none; 
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #0055A4; 
+    text-align: center;
+}
+
+.sidebar ul li a {
+    color: white;
+    display: block;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.logo{
+    margin-left: 35%;
+}
